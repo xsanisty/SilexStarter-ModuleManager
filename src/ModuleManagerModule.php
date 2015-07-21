@@ -33,7 +33,7 @@ class ModuleManagerModule implements ModuleProviderInterface
 
     public function getModuleIdentifier()
     {
-        return 'silexstarter-module';
+        return 'silexstarter-modulemanager';
     }
 
     public function getRequiredModules()
@@ -67,8 +67,8 @@ class ModuleManagerModule implements ModuleProviderInterface
         $menu   = Menu::get('admin_sidebar')->createItem(
             'module-manager',
             [
-                'icon'  => 'users',
-                'label' => 'User and Group',
+                'icon'  => 'cubes',
+                'label' => 'Manage Modules',
                 'url'   => '#'
             ]
         );
