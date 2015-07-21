@@ -1,6 +1,6 @@
 {
     "name": "xsanisty/silex-starter-module-manager",
-    "description": "Core utility of SilexStarter application",
+    "description": "Module manager utility of SilexStarter application",
 
     "license": "MIT",
     "authors": [
