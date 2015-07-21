@@ -16,7 +16,7 @@
     "minimum-stability": "stable",
     "autoload" : {
         "psr-4": {
-            "Xsanisty\\" : [ "src/", "tests/"]
+            "Xsanisty\\ModuleManager\\" : [ "src/", "tests/"]
         }
     }
 }
