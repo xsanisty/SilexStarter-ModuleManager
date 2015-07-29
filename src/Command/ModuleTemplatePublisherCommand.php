@@ -16,10 +16,9 @@ class ModuleTemplatePublisherCommand extends Command
         $this->setName('module:publish-template')
              ->setDescription('Publish module template into application template directory');
 
-        $this->addOption(
+        $this->addArgument(
             'module',
-            null,
-            InputOption::VALUE_OPTIONAL,
+            InputArgument::OPTIONAL,
             'If set, the command will publish templates of specific module'
         );
     }
@@ -29,16 +28,14 @@ class ModuleTemplatePublisherCommand extends Command
         $app            = $this->getSilexStarter();
         $moduleManager  = $app['module'];
         $registeredMod  = $moduleManager->getRegisteredModules();
-        $moduleId       = $input->getOption('module');
+        $moduleId       = $input->getArgument('module');
 
         $publishedMod   = [];
 
         if ($moduleId) {
             $publishedMod[] = $moduleId;
         } else {
-            foreach ($registeredMod as $mod) {
-                $publishedMod[] = $mod->getModuleIdentifier();
-            }
+            $publishedMod   = array_keys($registeredMod);
         }
 
         foreach ($publishedMod as $mod) {
