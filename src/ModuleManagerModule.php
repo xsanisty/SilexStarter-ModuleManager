@@ -85,7 +85,7 @@ class ModuleManagerModule implements ModuleProviderInterface
             'manage-module',
             [
                 'icon'  => 'cubes',
-                'label' => 'ManageModule',
+                'label' => 'Manage Module',
                 'url'   => Url::to('modulemanager.module')
             ]
         );
