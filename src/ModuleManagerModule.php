@@ -9,6 +9,7 @@ use Silex\Application;
 use SilexStarter\Module\ModuleInfo;
 use SilexStarter\Module\ModuleResource;
 use SilexStarter\Contracts\ModuleProviderInterface;
+use Xsanisty\Admin\DashboardModule;
 
 class ModuleManagerModule implements ModuleProviderInterface
 {
@@ -55,11 +56,18 @@ class ModuleManagerModule implements ModuleProviderInterface
 
     public function register()
     {
+        $provider = $this;
+
+        $this->app['dispatcher']->addListener(
+            DashboardModule::INIT,
+            function () use ($provider) {
+                $provider->registerSidebarMenu();
+            }
+        );
     }
 
     public function boot()
     {
-        $this->registerSidebarMenu();
     }
 
     protected function registerSidebarMenu()
@@ -68,8 +76,17 @@ class ModuleManagerModule implements ModuleProviderInterface
             'module-manager',
             [
                 'icon'  => 'cubes',
-                'label' => 'Manage Modules',
+                'label' => 'Module',
                 'url'   => '#'
+            ]
+        );
+
+        $menu->addChildren(
+            'manage-module',
+            [
+                'icon'  => 'cubes',
+                'label' => 'ManageModule',
+                'url'   => Url::to('modulemanager.module')
             ]
         );
     }
