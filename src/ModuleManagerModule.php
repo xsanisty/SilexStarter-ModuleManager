@@ -47,6 +47,7 @@ class ModuleManagerModule implements ModuleProviderInterface
         return new ModuleResource(
             [
                 'routes'        => 'Resources/routes.php',
+                'assets'        => 'Resources/assets',
                 'views'         => 'Resources/views',
                 'controllers'   => 'Controller',
                 'commands'      => 'Command',
@@ -86,7 +87,7 @@ class ModuleManagerModule implements ModuleProviderInterface
             [
                 'icon'  => 'cubes',
                 'label' => 'Manage Module',
-                'url'   => Url::to('modulemanager.module')
+                'url'   => Url::to('modulemanager.module.index')
             ]
         );
     }
