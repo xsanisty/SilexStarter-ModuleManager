@@ -1,6 +1,7 @@
 $(document).ready(function(){
     $('#module_table')
     .on('click', '.publish-asset, .publish-config, .publish-template', function(e){
+        e.preventDefault();
         var serviceUrl;
 
         switch ($(this).attr('class')) {
@@ -30,8 +31,26 @@ $(document).ready(function(){
         });
     })
     .on('click', '.remove', function(e){
-        $.ajax({
-            method :'POST'
-        });
+        e.preventDefault();
+
+        if(confirm('Are you sure to remove this module?')) {
+            var row = $(this).parents('tr');
+            var moduleId = $(this).attr('data-module-id');
+
+            $.ajax({
+                method :'POST',
+                url : moduleUrl.remove,
+                data : {
+                    module : moduleId
+                },
+                success : function() {
+                    alert('Module with id "'+moduleId+'" is ow removed!');
+                    row.remove();
+                },
+                error : function(resp) {
+                    alert(resp.responseJSON.data + '\n\nDetailed error response:\n' + resp.responseJSON.errors.message);
+                }
+            });
+        }
     })
 });

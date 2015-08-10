@@ -4,16 +4,19 @@ namespace Xsanisty\ModuleManager\Controller;
 
 use Exception;
 use SilexStarter\Module\ModuleManager;
+use SilexStarter\Config\ConfigurationContainer;
 use SilexStarter\Controller\DispatcherAwareController;
 use Xsanisty\Admin\DashboardModule;
 
 class ModuleController extends DispatcherAwareController
 {
     protected $module;
+    protected $config;
 
-    public function __construct(ModuleManager $module)
+    public function __construct(ModuleManager $module, ConfigurationContainer $config)
     {
         $this->module = $module;
+        $this->config = $config;
     }
 
     public function index()
@@ -38,6 +41,32 @@ class ModuleController extends DispatcherAwareController
     public function publishTemplate()
     {
         return $this->publish('template', Request::get('module'));
+    }
+
+    public function remove()
+    {
+        $moduleId           = Request::get('module');
+        $moduleProvider     = $this->module->getModule($moduleId);
+        $moduleClass        = (new \ReflectionClass($moduleProvider))->getName();
+        $registeredModules  = $this->config->get('modules');
+        $moduleKey          = array_search($moduleClass, $registeredModules);
+
+        if (false !== $moduleKey) {
+            unset($registeredModules[$moduleKey]);
+            $this->config->save('modules', $registeredModules);
+
+            return Response::ajax("Module with identifier '$moduleId' is now removed");
+        }
+
+        return Response::ajax(
+            'Can not find module with identifier: '.$moduleId,
+            500,
+            false,
+            [
+                'message'   => 'Can not find module with identifier: '.$moduleId,
+                'code'      => 500
+            ]
+        );
     }
 
     protected function publish($what, $module)
