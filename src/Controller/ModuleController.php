@@ -69,6 +69,11 @@ class ModuleController extends DispatcherAwareController
         );
     }
 
+    public function migrate()
+    {
+
+    }
+
     protected function publish($what, $module)
     {
         try {

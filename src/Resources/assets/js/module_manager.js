@@ -44,7 +44,10 @@ $(document).ready(function(){
                     module : moduleId
                 },
                 success : function() {
-                    alert('Module with id "'+moduleId+'" is ow removed!');
+                    alert(
+                        'Module with id "'+moduleId+'" is now removed from the module registry!\n\n'+
+                        'Files, assets, and other module\'s files are not removed'
+                    );
                     row.remove();
                 },
                 error : function(resp) {

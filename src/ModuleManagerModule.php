@@ -76,9 +76,10 @@ class ModuleManagerModule implements ModuleProviderInterface
         $menu   = Menu::get('admin_sidebar')->createItem(
             'module-manager',
             [
-                'icon'  => 'cubes',
-                'label' => 'Module',
-                'url'   => '#'
+                'icon'      => 'cubes',
+                'label'     => 'Module',
+                'url'       => '#',
+                'permission'=> ['modulemanager.manage_module']
             ]
         );
 
@@ -87,7 +88,8 @@ class ModuleManagerModule implements ModuleProviderInterface
             [
                 'icon'  => 'cubes',
                 'label' => 'Manage Module',
-                'url'   => Url::to('modulemanager.module.index')
+                'url'   => Url::to('modulemanager.module.index'),
+                'permission'=> 'modulemanager.manage_module'
             ]
         );
     }
