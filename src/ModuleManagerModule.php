@@ -88,7 +88,7 @@ class ModuleManagerModule implements ModuleProviderInterface
             [
                 'icon'  => 'cubes',
                 'label' => 'Manage Module',
-                'url'   => Url::to('modulemanager.module.index'),
+                'url'   => 'modulemanager.module.index',
                 'permission'=> 'modulemanager.manage_module'
             ]
         );
