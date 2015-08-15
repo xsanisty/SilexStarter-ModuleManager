@@ -1,7 +1,7 @@
 <?php
 
 Route::group(
-    '/admin',
+    Config::get('@silexstarter-dashboard.config.admin_prefix'),
     function () {
         Route::resource('/module', 'ModuleController', ['as' => 'modulemanager.module', 'only' => ['index', 'delete', 'store']]);
         Route::post('/module/publish-asset', 'ModuleController:publishAsset', ['as' => 'modulemanager.module.publish-asset']);

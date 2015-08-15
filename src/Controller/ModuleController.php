@@ -25,7 +25,14 @@ class ModuleController extends DispatcherAwareController
 
         Menu::get('admin_sidebar')->setActive('module-manager.manage-module');
 
-        return Response::view('@silexstarter-modulemanager/module/index', ['modules' => $this->module->getRegisteredModules()]);
+        return Response::view(
+            '@silexstarter-modulemanager/module/index',
+            [
+                'modules'   => $this->module->getRegisteredModules(),
+                'title'     => 'Manage Modules',
+                'page_title'=> 'Manage Modules',
+            ]
+        );
     }
 
     public function publishAsset()
