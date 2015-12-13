@@ -1,4 +1,25 @@
 $(document).ready(function(){
+    var moduleUrl = {
+        publishAsset : global.modulePublishAssetUrl,
+        publishConfig : global.modulePublishConfigUrl,
+        publishTemplate : global.modulePublishTemplatehUrl,
+        remove : global.moduleRemoveUrl
+    };
+
+    var domSetting  = global.admin_template == 'RDash'
+                    ? "<'row'<'col-md-12'<'widget'<'widget-title'<'row'<'col-md-5'<'#icon-wrapper'>><'col-md-3 hidden-xs'l><'col-md-4 hidden-xs'f>><'clearfix'>><'widget-body flow no-padding'tr><'widget-title'<'col-sm-5'i><'col-sm-7'p><'clearfix'>>>>"
+                    : "<'row'<'col-md-12'<'box box-primary'<'box-header'<'row'<'col-md-6'<'#icon-wrapper'>><'col-md-3 hidden-xs'l><'col-md-3 hidden-xs'f>><> <'box-body no-padding'tr><'box-footer clearfix'<'col-sm-5'i><'col-sm-7'p>>>>>";
+
+
+    var $datatable = $('#module_table').DataTable({
+        "processing": true,
+        "serverSide": false,
+        "responsive": true,
+        "dom": domSetting
+    });
+
+    $('#btn-module-action').appendTo('#icon-wrapper');
+
     $('#module_table')
     .on('click', '.publish-asset, .publish-config, .publish-template', function(e){
         e.preventDefault();
@@ -23,10 +44,15 @@ $(document).ready(function(){
                 module : $(this).attr('data-module-id')
             },
             success : function(resp){
-                alert(resp.data);
+                alert(resp.content);
             },
             error : function(resp){
-                alert(resp.responseJSON.data + '\n\nDetailed error response:\n' + resp.responseJSON.errors.message);
+                if(resp.status == 401){
+                    alert('Your session is expired!\n\nYou will be redirected to the login page shortly.');
+                    window.location.reload();
+                } else {
+                    alert(resp.responseJSON.content + '\n\nDetailed error response:\n' + resp.responseJSON.errors[0].message);
+                }
             }
         });
     })
@@ -51,9 +77,20 @@ $(document).ready(function(){
                     row.remove();
                 },
                 error : function(resp) {
-                    alert(resp.responseJSON.data + '\n\nDetailed error response:\n' + resp.responseJSON.errors.message);
+                    if(resp.status == 401){
+                        alert('Your session is expired!\n\nYou will be redirected to the login page shortly.');
+                        window.location.reload();
+                    } else {
+                        alert(resp.responseJSON.content + '\n\nDetailed error response:\n' + resp.responseJSON.errors[0].message);
+                    }
                 }
             });
         }
+    });
+
+    $('#btn-module-add').click(function(e){
+        e.preventDefault();
+
+        $('#module-add-modal').modal('show');
     })
 });

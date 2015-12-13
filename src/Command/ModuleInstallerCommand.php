@@ -13,7 +13,12 @@ class ModuleInstallerCommand extends Command
     {
         $this
             ->setName('module:install')
-            ->setDescription('Install module into SilexStarter application');
+            ->setDescription('Install module into SilexStarter application')
+            ->addArgument(
+                'module-class',
+                InputArgument::REQUIRED,
+                'The fully qualified module class name, e.g. \'VendorName\\ModuleName\\ModuleProvider\''
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

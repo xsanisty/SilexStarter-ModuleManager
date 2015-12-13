@@ -15,11 +15,33 @@ class ModuleManagerModule implements ModuleProviderInterface
 {
     protected $app;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getModuleIdentifier()
+    {
+        return 'silexstarter-modulemanager';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredModules()
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getInfo()
     {
         return new ModuleInfo(
@@ -32,16 +54,9 @@ class ModuleManagerModule implements ModuleProviderInterface
         );
     }
 
-    public function getModuleIdentifier()
-    {
-        return 'silexstarter-modulemanager';
-    }
-
-    public function getRequiredModules()
-    {
-        return [];
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getResources()
     {
         return new ModuleResource(
@@ -55,6 +70,36 @@ class ModuleManagerModule implements ModuleProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredPermissions()
+    {
+        return [
+            'modulemanager.module.install'  => 'Install new module into application',
+            'modulemanager.module.uninstall'=> 'Unnstall existing module from application',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function install()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function uninstall()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function register()
     {
         $provider = $this;
@@ -67,6 +112,9 @@ class ModuleManagerModule implements ModuleProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function boot()
     {
     }
@@ -86,9 +134,9 @@ class ModuleManagerModule implements ModuleProviderInterface
         $menu->addChildren(
             'manage-module',
             [
-                'icon'  => 'cubes',
-                'label' => 'Manage Module',
-                'url'   => 'modulemanager.module.index',
+                'icon'      => 'cubes',
+                'label'     => 'Manage Module',
+                'url'       => Url::to('modulemanager.module.index'),
                 'permission'=> 'modulemanager.manage_module'
             ]
         );

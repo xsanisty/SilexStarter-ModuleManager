@@ -1,83 +1,87 @@
 {% set template = config.get('@silexstarter-dashboard.config.template') %}
 {% extends '@silexstarter-dashboard/'~ template ~'/index.twig' %}
 
-{% block breadcrumb %}
-    <a href="{{url('admin.home')}}">Home</a> / <a href="#">Modules</a>
+{% block stylesheet %}
+    {{ parent() }}
+    {{ stylesheet([
+        '@silexstarter-datatable/css/dataTables.bootstrap.css',
+        '@silexstarter-datatable/css/responsive.bootstrap.min.css'
+    ]) }}
 {% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <div class="widget">
-            <div class="widget-title">
-                <button class="btn btn-primary btn-sm"><i class="fa fa-fw fa-plus"></i> Add new module</button>
-            </div>
-            <div class="widget-body no-padding">
-                <table class="table table-condensed table-striped" id="module_table" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <th style="width: 15%">Module Id</th>
-                            <th style="width: 20%">Name</th>
-                            <th style="width: 20%">Author</th>
-                            <th style="width: 25%">Description</th>
-                            <th style="width: 5%">Version</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for module in modules %}
-                        {% set moduleInfo = module.getInfo %}
-                        <tr>
-                            <td>{{ module.getModuleIdentifier }}</td>
-                            <td>{{ moduleInfo.name }}</td>
-                            <td>
-                                {{ moduleInfo.author_name }}
-                                {% if moduleInfo.author_email %}
-                                    <br>&lt;<a href="mailto:{{ moduleInfo.author_email }}">{{ moduleInfo.author_email }}</a>&gt;
-                                {% endif %}
-                            </td>
-                            <td>{{ moduleInfo.description }}</td>
-                            <td>{{ moduleInfo.version }}</td>
-                            <td class="text-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Action <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-right text-left">
-                                        {% if moduleInfo.repository %}
-                                            <li><a href="{{moduleInfo.repository}}" target="_blank"><i class="fa fa-fw fa-github"></i> repository</a></li>
-                                        {% endif %}
-                                        {% if moduleInfo.website %}
-                                            <li><a href="{{moduleInfo.repository}}" target="_blank"><i class="fa fa-fw fa-globe"></i> website</a></li>
-                                        {% endif %}
-                                            <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="publish-asset"><i class="fa fa-fw fa-file-image-o"></i> publish asset</a></li>
-                                            <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="publish-config"><i class="fa fa-fw fa-code"></i> publish config</a></li>
-                                            <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="publish-template"><i class="fa fa-fw fa-clone"></i> publish template</a></li>
-                                            <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="migrate"><i class="fa fa-fw fa-database"></i> migrate database</a></li>
-                                            <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="remove"><i class="fa fa-fw fa-remove"></i> remove</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="btn-group" id="btn-module-action">
+            <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-fw fa-plus"></i> Add new module
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="btn-module-add">Add from existing</a></li>
+                <li><a href="#" id="btn-module-upload">Upload new package</a></li>
+            </ul>
         </div>
+        <table class="table table-condensed table-striped" id="module_table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th class="all" style="width: 15%">Module Id</th>
+                    <th class="desktop" style="width: 20%">Name</th>
+                    <th class="desktop" style="width: 20%">Author</th>
+                    <th class="desktop" style="width: 25%">Description</th>
+                    <th class="desktop" style="width: 5%">Version</th>
+                    <th class="desktop text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for module in modules %}
+                {% set moduleInfo = module.getInfo %}
+                {% set moduleResource = module.getResources %}
+                <tr>
+                    <td>{{ module.getModuleIdentifier }}</td>
+                    <td>{{ moduleInfo.name }}</td>
+                    <td>
+                        {{ moduleInfo.author_name }}
+                        {% if moduleInfo.author_email %}
+                            <br>&lt;<a href="mailto:{{ moduleInfo.author_email }}">{{ moduleInfo.author_email }}</a>&gt;
+                        {% endif %}
+                    </td>
+                    <td>{{ moduleInfo.description }}</td>
+                    <td>{{ moduleInfo.version }}</td>
+                    <td class="text-center">
+                        <div class="btn-group hidden-xs">
+                            <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right text-left">
+                                {% if moduleInfo.repository %}
+                                    <li><a href="{{moduleInfo.repository}}" target="_blank"><i class="fa fa-fw fa-github"></i> repository</a></li>
+                                {% endif %}
+                                {% if moduleInfo.website %}
+                                    <li><a href="{{moduleInfo.repository}}" target="_blank"><i class="fa fa-fw fa-globe"></i> website</a></li>
+                                {% endif %}
+                                    <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="publish-asset"><i class="fa fa-fw fa-file-image-o"></i> publish asset</a></li>
+                                    <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="publish-config"><i class="fa fa-fw fa-code"></i> publish config</a></li>
+                                    <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="publish-template"><i class="fa fa-fw fa-clone"></i> publish template</a></li>
+                                    <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="migrate"><i class="fa fa-fw fa-database"></i> migrate database</a></li>
+                                    <li><a href="#" data-module-id="{{module.getModuleIdentifier}}" class="remove"><i class="fa fa-fw fa-remove"></i> remove</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
 
 {% block javascript %}
-    {{parent()}}
+    {{ parent() }}
 
-    <script>
-        var moduleUrl = {
-            publishAsset : '{{url('modulemanager.module.publish-asset')}}',
-            publishConfig : '{{url('modulemanager.module.publish-config')}}',
-            publishTemplate : '{{url('modulemanager.module.publish-template')}}',
-            remove : '{{url('modulemanager.module.remove')}}'
-        };
-    </script>
+    {{ javascript([
+        '@silexstarter-datatable/js/jquery.dataTables.min.js',
+        '@silexstarter-datatable/js/dataTables.bootstrap.min.js',
+        '@silexstarter-datatable/js/dataTables.responsive.min.js',
+    ]) }}
     {{ javascript('@silexstarter-modulemanager/js/module_manager.js')}}
 {% endblock %}

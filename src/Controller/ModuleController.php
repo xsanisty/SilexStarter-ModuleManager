@@ -5,10 +5,9 @@ namespace Xsanisty\ModuleManager\Controller;
 use Exception;
 use SilexStarter\Module\ModuleManager;
 use SilexStarter\Config\ConfigurationContainer;
-use SilexStarter\Controller\DispatcherAwareController;
 use Xsanisty\Admin\DashboardModule;
 
-class ModuleController extends DispatcherAwareController
+class ModuleController
 {
     protected $module;
     protected $config;
@@ -21,9 +20,24 @@ class ModuleController extends DispatcherAwareController
 
     public function index()
     {
-        $this->getDispatcher()->dispatch(DashboardModule::INIT);
-
+        Event::fire(DashboardModule::INIT);
         Menu::get('admin_sidebar')->setActive('module-manager.manage-module');
+        Menu::get('admin_breadcrumb')->createItem(
+            'manage-module',
+            [
+                'icon'  => 'cubes',
+                'label' => 'Manage Modules'
+            ]
+        );
+
+        Asset::exportVariable(
+            [
+                'modulePublishAssetUrl'     => Url::to('modulemanager.module.publish-asset'),
+                'modulePublishConfigUrl'    => Url::to('modulemanager.module.publish-config'),
+                'modulePublishTemplatehUrl' => Url::to('modulemanager.module.publish-template'),
+                'moduleRemoveUrl'           => Url::to('modulemanager.module.remove'),
+            ]
+        );
 
         return Response::view(
             '@silexstarter-modulemanager/module/index',
@@ -54,7 +68,7 @@ class ModuleController extends DispatcherAwareController
     {
         $moduleId           = Request::get('module');
         $moduleProvider     = $this->module->getModule($moduleId);
-        $moduleClass        = (new \ReflectionClass($moduleProvider))->getName();
+        $moduleClass        = get_class($moduleProvider);
         $registeredModules  = $this->config->get('modules');
         $moduleKey          = array_search($moduleClass, $registeredModules);
 
@@ -68,11 +82,10 @@ class ModuleController extends DispatcherAwareController
         return Response::ajax(
             'Can not find module with identifier: '.$moduleId,
             500,
-            false,
-            [
+            [[
                 'message'   => 'Can not find module with identifier: '.$moduleId,
                 'code'      => 500
-            ]
+            ]]
         );
     }
 
@@ -102,11 +115,10 @@ class ModuleController extends DispatcherAwareController
             return Response::ajax(
                 'Can not publish ' . $what . ' of module '. $module,
                 500,
-                false,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }
