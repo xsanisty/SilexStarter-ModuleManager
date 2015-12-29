@@ -64,6 +64,7 @@ class ModuleManagerModule implements ModuleProviderInterface
                 'routes'        => 'Resources/routes.php',
                 'assets'        => 'Resources/assets',
                 'views'         => 'Resources/views',
+                'config'        => 'Resources/config',
                 'controllers'   => 'Controller',
                 'commands'      => 'Command',
             ]
@@ -121,24 +122,28 @@ class ModuleManagerModule implements ModuleProviderInterface
 
     protected function registerSidebarMenu()
     {
-        $menu   = Menu::get('admin_sidebar')->createItem(
-            'module-manager',
-            [
-                'icon'      => 'cubes',
-                'label'     => 'Module',
-                'url'       => '#',
-                'permission'=> ['modulemanager.manage_module']
-            ]
-        );
+        $showMenu = $this->app['config']->get('@silexstarter-modulemanager.config.show_dashboard_menu');
 
-        $menu->addChildren(
-            'manage-module',
-            [
-                'icon'      => 'cubes',
-                'label'     => 'Manage Module',
-                'url'       => Url::to('modulemanager.module.index'),
-                'permission'=> 'modulemanager.manage_module'
-            ]
-        );
+        if ($showMenu) {
+            $menu = Menu::get('admin_sidebar')->createItem(
+                'module-manager',
+                [
+                    'icon'      => 'cubes',
+                    'label'     => 'Module',
+                    'url'       => '#',
+                    'permission'=> ['modulemanager.manage_module']
+                ]
+            );
+
+            $menu->addChildren(
+                'manage-module',
+                [
+                    'icon'      => 'cubes',
+                    'label'     => 'Manage Module',
+                    'url'       => Url::to('modulemanager.module.index'),
+                    'permission'=> 'modulemanager.manage_module'
+                ]
+            );
+        }
     }
 }
