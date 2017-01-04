@@ -1,0 +1,83 @@
+<?php
+
+namespace {{namespace}};
+
+use Silex\Application;
+use SilexStarter\Module\ModuleInfo;
+use SilexStarter\Module\ModuleResource;
+use SilexStarter\Module\ModuleProvider;
+
+class {{moduleClass}} extends ModuleProvider
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+
+        $this->info = new ModuleInfo(
+            [
+                'name'          => '{{moduleName}}',
+                'description'   => '{{moduleDescription}}',
+                'author_name'   => '{{authorName}}',
+                'author_email'  => '{{authorEmail}}',
+                'repository'    => '{{moduleRepository}}',
+                'version'       => '{{moduleVersion}}',
+            ]
+        );
+
+        $this->resources = new ModuleResource(
+            [
+                'controllers'   => 'Controller',
+                'commands'      => 'Command',
+                'routes'        => 'Resources/routes.php',
+                'services'      => 'Resources/config/services.php',
+                'middlewares'   => 'Resources/middlewares.php',
+                'views'         => 'Resources/views',
+                'config'        => 'Resources/config',
+                'assets'        => 'Resources/assets',
+                'migrations'    => 'Resources/migrations',
+                'translations'  => 'Resources/translations',
+                'assets'        => 'Resources/assets'
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getModuleIdentifier()
+    {
+        return '{{moduleName}}';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredModules()
+    {
+        return [
+            'silexstarter-dashboard',
+            //add more required module here
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredPermissions()
+    {
+        return [
+            //"module.permission.name" => "Permission Description",
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function register()
+    {
+        //do some registration process here
+    }
+}
