@@ -36,7 +36,6 @@ class {{moduleClass}} extends ModuleProvider
                 'middlewares'   => 'Resources/middlewares.php',
                 'views'         => 'Resources/views',
                 'config'        => 'Resources/config',
-                'assets'        => 'Resources/assets',
                 'migrations'    => 'Resources/migrations',
                 'translations'  => 'Resources/translations',
                 'assets'        => 'Resources/assets'
