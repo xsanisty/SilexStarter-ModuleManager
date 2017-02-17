@@ -175,7 +175,7 @@ class ModuleCreateCommand extends Command
         $routePath = $this->app['path.module'] . str_replace('\\', '/', $namespace) . '/Resources/routes.php';
 
         $this->output->writeln('<info> - Route file created at "' . $routePath . '"</info>');
-        $this->filesystem->dumpFile($routePath, "<?php\n\nreturn [];\n");
+        $this->filesystem->dumpFile($routePath, "<?php\n\n/** register your route here */\n");
     }
 
     /**
