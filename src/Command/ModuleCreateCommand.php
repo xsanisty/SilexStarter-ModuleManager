@@ -14,6 +14,7 @@ class ModuleCreateCommand extends Command
     protected $app;
     protected $output;
     protected $input;
+    protected $module;
 
     protected function configure()
     {
@@ -58,7 +59,8 @@ class ModuleCreateCommand extends Command
                 'module-version',
                 's',
                 InputOption::VALUE_REQUIRED,
-                ''
+                'Module version',
+                '1.0.0'
             );
     }
 
@@ -71,8 +73,8 @@ class ModuleCreateCommand extends Command
 
         $this->output   = $output;
         $this->input    = $input;
+        $this->module   = $moduleName = $input->getArgument('module-name');
         $moduleManager  = $app['module'];
-        $moduleName     = $input->getArgument('module-name');
 
         $moduleNs       = $input->getOption('module-namespace')
                         ? $input->getOption('module-namespace')
@@ -110,7 +112,6 @@ class ModuleCreateCommand extends Command
             '/Contracts',
             '/Controller',
             '/Repository',
-            '/Resources',
             '/Resources',
             '/Resources/views',
             '/Resources/config',
@@ -161,7 +162,6 @@ class ModuleCreateCommand extends Command
 
         $this->output->writeln('<info> - Module provider class created at "' . $classPath . '"</info>');
         $this->filesystem->dumpFile($classPath, $compiledClass);
-
     }
 
     /**
@@ -187,12 +187,20 @@ class ModuleCreateCommand extends Command
     {
         $this->output->writeln('<comment>Generating basic config file</comment>');
         $namespace = str_replace('\\', '/', $namespace);
+        $variables = [
+            'module_name'   => $this->module,
+            'module_title'  => ucwords(str_replace(['-', '_'], ' ', $this->module))
+        ];
 
-        foreach(['config', 'services'] as $config) {
+        foreach (['config', 'services', 'menus'] as $config) {
             $configPath = $this->app['path.module'] . $namespace . '/Resources/config/' . $config . '.php';
 
+            $configTemplate = $config != 'menus'
+                            ? "<?php\n\nreturn [];\n"
+                            : $this->app['twig']->render('@stubs/menus.stub', $variables);
+
             $this->output->writeln('<info> - Config file created at "' . $configPath . '"</info>');
-            $this->filesystem->dumpFile($configPath, "<?php\n\nreturn [];\n");
+            $this->filesystem->dumpFile($configPath, $configTemplate);
         }
     }
 

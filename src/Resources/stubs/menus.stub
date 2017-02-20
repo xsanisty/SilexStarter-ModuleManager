@@ -1,0 +1,17 @@
+<?php
+
+return [
+    'admin_sidebar' => [
+        '{{module_name}}' => [
+            'icon'          => 'circle-o',
+            'label'         => '{{module_title}}',
+            'url'           => '#',
+            'permissions'   => [
+                '{{module_name}}.access'
+            ],
+            'submenu'  => [
+
+            ]
+        ]
+    ]
+];

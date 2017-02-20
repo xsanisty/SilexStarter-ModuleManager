@@ -10,6 +10,21 @@ use SilexStarter\Module\ModuleProvider;
 class {{moduleClass}} extends ModuleProvider
 {
     /**
+     * Application instance
+     */
+    protected $app;
+
+    /**
+     * ModuleInfo object
+     */
+    protected $info;
+
+    /**
+     * ModuleResource object
+     */
+    protected $resources;
+    
+    /**
      * {@inheritdoc}
      */
     public function __construct(Application $app)
