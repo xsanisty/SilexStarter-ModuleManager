@@ -21,6 +21,14 @@ class ModuleAssetPublisherCommand extends Command
             InputArgument::OPTIONAL,
             'If set, the command will publish assets of specific module'
         );
+
+        $this->addOption(
+            'symlink',
+            's',
+            InputOption::VALUE_NONE,
+            'Create symbolic link instead copy the assets files',
+            false
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -29,6 +37,7 @@ class ModuleAssetPublisherCommand extends Command
         $moduleManager  = $app['module'];
         $registeredMod  = $moduleManager->getRegisteredModules();
         $moduleId       = $input->getArgument('module');
+        $useSymlink     = $input->getOption('symlink');
 
         $publishedMod   = [];
 
@@ -43,7 +52,7 @@ class ModuleAssetPublisherCommand extends Command
                 if ($registeredMod[$mod]->getResources()->assets) {
                     try {
                         $output->writeLn('<info>Publishing asset of '.$mod.' to '.$app['path.public'].'assets/'.$mod.'</info>');
-                        $moduleManager->publishAsset($mod);
+                        $moduleManager->publishAsset($mod, $useSymlink);
                     } catch (Exception $e) {
                         $output->writeLn('<error>Error occured while publishing asset of "'.$mod.'" module</error>');
                         $output->writeLn('<error>'.$e->getMessage().'</error>');
