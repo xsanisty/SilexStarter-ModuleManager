@@ -26,8 +26,7 @@ class ModuleAssetPublisherCommand extends Command
             'symlink',
             's',
             InputOption::VALUE_NONE,
-            'Create symbolic link instead copy the assets files',
-            false
+            'Create symbolic link instead copy the assets files'
         );
     }
 
